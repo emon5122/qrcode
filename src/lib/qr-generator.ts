@@ -1,3 +1,4 @@
+"use server"
 import QRCode from "qrcode";
 
 const generateQR = async (text: string) => {
