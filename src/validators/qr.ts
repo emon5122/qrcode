@@ -1,5 +1,6 @@
 import { z } from "zod";
 import isMobilePhone from "validator/lib/isMobilePhone";
+import isHexColor from "validator/lib/isHexColor";
 export const qrBody = z.object({
     text: z.string()
 })
@@ -28,3 +29,11 @@ export const qrBodyVCard = z.object({
     }).optional(),
     website: z.string().url().optional()
 })
+
+export const qrSettings=z.object({
+    margin: z.number().default(2),
+    type: z.enum(["image/png", "image/jpeg","image/webp"]).default("image/png"),
+    color: z.object({dark:z.string().default("#000"),light:z.string().default("#fff")})
+})
+
+export const qrBodyAndSettings = z.object({})
