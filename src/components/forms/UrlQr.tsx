@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/ui/button";
 import {
     Form,
     FormControl,
@@ -7,47 +8,33 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TQrBodyUrl } from "@/types/qr";
 import { qrBodyURL } from "@/validators/qr";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UseMutationResult } from "@tanstack/react-query";
+import { Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 
-const UrlQr = ({
-    qrMutation,
-}: {
-    qrMutation: UseMutationResult<
-        void,
-        unknown,
-        {
-            text: string;
-        },
-        unknown
-    >;
-}) => {
+const UrlQr = ({ onGenerate }: { onGenerate: (text: string) => void }) => {
     const form = useForm<TQrBodyUrl>({
         resolver: zodResolver(qrBodyURL),
+        defaultValues: { text: "" },
     });
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit((data) => {
-                    qrMutation.mutate(data);
-                    form.reset();
-                })}
-                className="flex flex-col gap-2"
+                onSubmit={form.handleSubmit((data) => onGenerate(data.text))}
+                className="flex flex-col gap-4"
             >
                 <FormField
                     control={form.control}
                     name="text"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>URL</FormLabel>
+                            <FormLabel>Website URL</FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="https://nexisltd.com"
+                                    placeholder="https://example.com"
                                     {...field}
                                 />
                             </FormControl>
@@ -55,7 +42,10 @@ const UrlQr = ({
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Generate</Button>
+                <Button type="submit" className="gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    Generate QR Code
+                </Button>
             </form>
         </Form>
     );
